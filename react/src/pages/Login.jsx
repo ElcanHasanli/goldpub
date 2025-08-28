@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { useDarkMode } from '../components/useDarkMode.js';
 // import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
-import { useLoginMutation } from '../services/apiSlice';
+import { users } from '../data/users';
 
 export default function Login() {
   const [username, setUsername] = useState('');
@@ -21,7 +21,6 @@ export default function Login() {
   const { isDarkMode, toggleDarkMode } = useDarkMode();
 
   const { login } = useAuth();
-  const [apiLogin, { isLoading: isApiLoading }] = useLoginMutation();
 
   // Dynamic styles based on dark mode
   const getContainerStyle = () => ({
@@ -156,45 +155,32 @@ export default function Login() {
     setError('');
 
     try {
-      // API login cəhdi
-      const result = await apiLogin({ username, password }).unwrap();
+      // Local authentication - check against users data
+      const user = users.find(u => u.username === username && u.password === password);
       
-      console.log('Backend response:', result); // Debug üçün
-      
-      // Backend cavabı yoxlayırıq
-      if (result && result.role) {
-        // API login uğurlu
+      if (user) {
+        // Local login successful
         const userData = {
-          username: username, // Frontend-dən gələn username
-          role: result.role, // Backend-dən gələn role
-          id: result.id || null, // Əgər varsa
-          ...result // Bütün backend cavabını əlavə edirik
+          username: user.username,
+          role: user.role,
+          id: user.id || null,
+          ...user
         };
         
-        console.log('User data for navigation:', userData); // Debug üçün
+        console.log('User data for navigation:', userData);
         
-        login(userData); // Token olmadan login
+        login(userData);
         setFoundUser(userData);
         setSuccess(true);
         setIsLoading(false);
         return;
       } else {
-        setError('Giriş uğursuz oldu. Zəhmət olmasa məlumatları yoxlayın.');
+        setError('İstifadəçi adı və ya şifrə yanlışdır.');
         setIsLoading(false);
       }
-    } catch (apiError) {
-      console.error('API login xətası:', apiError);
-      
-      if (apiError.status === 401) {
-        setError('İstifadəçi adı və ya şifrə yanlışdır.');
-      } else if (apiError.status === 403) {
-        setError('Giriş icazəsi yoxdur.');
-      } else if (apiError.status === 500) {
-        setError('Server xətası. Zəhmət olmasa sonra cəhd edin.');
-      } else {
-        setError('Giriş zamanı xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.');
-      }
-      
+    } catch (error) {
+      console.error('Login xətası:', error);
+      setError('Giriş zamanı xəta baş verdi. Zəhmət olmasa yenidən cəhd edin.');
       setIsLoading(false);
     }
   };
@@ -206,7 +192,7 @@ export default function Login() {
       console.log('Navigation triggered:', { success, foundUser }); // Debug üçün
       setTimeout(() => {
         console.log('Navigating to:', foundUser.role); // Debug üçün
-        // API-dən gələn role-a əsaslanan navigation
+        // Role-a əsaslanan navigation
         if (foundUser.role === 'admin' || foundUser.role === 'ADMIN') {
           console.log('Going to dashboard');
           navigate('/dashboard');

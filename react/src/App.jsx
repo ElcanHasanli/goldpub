@@ -7,7 +7,7 @@ import Login from './pages/Login';
 import Dashboard from './pages/Dashboard';
 import CustomerPanel from './pages/dashboard/CustomerPanel';
 import CustomerData from './pages/dashboard/CustomerData';
-import Orders from './pages/Orders';
+
 import CourierPanel from './pages/CourierPanel';
 import DashboardContent from './pages/dashboard/DashboardContent';
 import { useDarkMode } from './components/useDarkMode';
@@ -60,16 +60,7 @@ export default function App() {
             />
 
             {/* Private route for regular user */}
-            <Route
-              path="/my-orders"
-              element={
-                <PrivateRoute allowedRoles={['user']}>
-                  <OrdersProvider>
-                    <Orders />
-                  </OrdersProvider>
-                </PrivateRoute>
-              }
-            />
+           
 
             {/* Catch all - redirect to login if path not matched */}
             <Route path="*" element={<Navigate to="/" />} />

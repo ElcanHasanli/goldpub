@@ -1,12 +1,11 @@
 import { configureStore } from '@reduxjs/toolkit';
-import { apiSlice } from '../services/apiSlice';
 
 export const store = configureStore({
   reducer: {
-    [apiSlice.reducerPath]: apiSlice.reducer,
+    // API reducer removed
   },
   middleware: (getDefaultMiddleware) =>
-    getDefaultMiddleware().concat(apiSlice.middleware),
+    getDefaultMiddleware(),
   devTools: process.env.NODE_ENV !== 'production',
 });
 

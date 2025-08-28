@@ -1,17 +1,26 @@
-// export const users = [
-//   {
-//     username: 'mudir',
-//     password: '1234',
-//     role: 'admin'
-//   },
-//   {
-//     username: 'kuryer1',
-//     password: '1111',
-//     role: 'courier'
-//   },
-//   {
-//     username: 'kuryer2',
-//     password: '2222',
-//     role: 'courier'
-//   }
-// ];
+export const users = [
+  {
+    id: 1,
+    username: 'admin',
+    password: 'admin123',
+    role: 'admin',
+    name: 'Administrator',
+    email: 'admin@suman.com'
+  },
+  {
+    id: 2,
+    username: 'courier',
+    password: 'courier123',
+    role: 'courier',
+    name: 'Courier User',
+    email: 'courier@suman.com'
+  },
+  {
+    id: 3,
+    username: 'user',
+    password: 'user123',
+    role: 'user',
+    name: 'Regular User',
+    email: 'user@suman.com'
+  }
+];
